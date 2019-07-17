@@ -94,15 +94,32 @@ class Book():
         cls.on_shelf.append(new_book)
         return new_book
 
+    @classmethod
     def current_due_date(cls):
         now = datetime.now()
         two_weeks = 60 * 60 * 24 * 14 # two weeks expressed in seconds  
         future_timestamp = now.timestamp() + two_weeks
         return datetime.fromtimestamp(future_timestamp)
 
+    @classmethod
     def overdue_books(cls):
-        pass
+        print('\n Overdue book')
+        # print(cls.on_loan[0].due_date)
 
+        overdue_list = []
+        
+        for book in cls.on_loan: #Iterates through each book in the on_loan list.
+            if (book.due_date < datetime.now()): #If current book's due_date happened before this moment.
+                print('THAT"S OVERDUEE!')
+                overdue_list.append(book)
+
+        print('Overdue book \n')
+
+        return overdue_list
+        # pass
+
+
+    @classmethod
     def browse(cls):
         pass
         # print('hey')
@@ -125,8 +142,8 @@ print(len(Book.on_loan)) # 1
 print(sister_outsider.lent_out()) # True
 print(sister_outsider.borrow()) # False
 print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
-# print(len(Book.overdue())) # 0
+print(len(Book.overdue_books())) # 0
 print(sister_outsider.return_to_library()) # True
-# print(sister_outsider.lent_out()) # False
+print(sister_outsider.lent_out()) # False
 print(len(Book.on_shelf)) # 2
 print(len(Book.on_loan)) # 0
