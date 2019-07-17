@@ -40,7 +40,17 @@ class Book():
         pass
 
     def lent_out(self):
-        pass
+        # print(self.on_shelf)
+
+        print(self)
+
+        for book in self.on_shelf: #Iterates through all books on_shelf
+            # print(book.title)
+            if (book == self): #If current iteration book is the same as the one triggering the instance method.
+                return False #The book has not been taken out.
+            return True #Else, the book has been taken out.
+            
+
 
 
     #These are class methods.
@@ -58,6 +68,8 @@ class Book():
 
     def browse(cls):
         pass
+        # print('hey')
+        # return random.choice(options)
 
 
 
@@ -67,17 +79,17 @@ aint_i = Book.create("Ain't I a Woman?", "Bell Hooks", "9780896081307")
 if_they_come = Book.create("If They Come in the Morning", "Angela Y. Davis", "0893880221")
 # print(Book.browse().title) # "Sister Outsider" (this value may be different for you)
 # print(Book.browse().title) # "Ain't I a Woman?" (this value may be different for you)
-# print(len(Book.on_shelf)) # 3
-# print(len(Book.on_loan)) # 0
-# print(sister_outsider.lent_out()) # False
-# print(sister_outsider.borrow()) # True
-# print(len(Book.on_shelf)) # 2
-# print(len(Book.on_loan)) # 1
-# print(sister_outsider.lent_out()) # True
-# print(sister_outsider.borrow()) # False
+print(len(Book.on_shelf)) # 3
+print(len(Book.on_loan)) # 0
+print(sister_outsider.lent_out()) # False
+print(sister_outsider.borrow()) # True
+print(len(Book.on_shelf)) # 2
+print(len(Book.on_loan)) # 1
+print(sister_outsider.lent_out()) # True
+print(sister_outsider.borrow()) # False
 # print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
 # print(len(Book.overdue())) # 0
 # print(sister_outsider.return_to_library()) # True
-# print(sister_outsider.lent_out()) # False
-# print(len(Book.on_shelf)) # 2
-# print(len(Book.on_loan)) # 0
+print(sister_outsider.lent_out()) # False
+print(len(Book.on_shelf)) # 2
+print(len(Book.on_loan)) # 0
