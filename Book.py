@@ -33,16 +33,25 @@ class Book():
         self.author = author
         self.ISBN = ISBN
 
+
     def borrow(self):
-        pass
+        if (self.lent_out()): #The book is already lent out.
+            return False
+        #Else, the book is not lent out.
+        self.due_date = self.current_due_date() #Sets the book's due_date to the current_due_date.
+        self.on_loan.append(self.on_shelf.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
+
+        return True
+
 
     def return_to_library(self):
         pass
 
+
     def lent_out(self):
         # print(self.on_shelf)
 
-        print(self)
+        # print(self)
 
         for book in self.on_shelf: #Iterates through all books on_shelf
             # print(book.title)
@@ -61,7 +70,10 @@ class Book():
         return new_book
 
     def current_due_date(cls):
-        pass
+        now = datetime.now()
+        two_weeks = 60 * 60 * 24 * 14 # two weeks expressed in seconds  
+        future_timestamp = now.timestamp() + two_weeks
+        return datetime.fromtimestamp(future_timestamp)
 
     def overdue_books(cls):
         pass
@@ -87,9 +99,9 @@ print(len(Book.on_shelf)) # 2
 print(len(Book.on_loan)) # 1
 print(sister_outsider.lent_out()) # True
 print(sister_outsider.borrow()) # False
-# print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
+print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
 # print(len(Book.overdue())) # 0
 # print(sister_outsider.return_to_library()) # True
-print(sister_outsider.lent_out()) # False
+# print(sister_outsider.lent_out()) # False
 print(len(Book.on_shelf)) # 2
-print(len(Book.on_loan)) # 0
+# print(len(Book.on_loan)) # 0
