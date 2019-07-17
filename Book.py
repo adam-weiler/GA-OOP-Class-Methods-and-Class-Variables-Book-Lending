@@ -39,12 +39,37 @@ class Book():
             return False
         #Else, the book is not lent out.
         self.due_date = self.current_due_date() #Sets the book's due_date to the current_due_date.
-        self.on_loan.append(self.on_shelf.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
+        
+        self.on_loan.append(self)
+        # self.on_loan.append(self.on_shelf.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
+        self.on_shelf.remove(self)
+
+        print('there')
+        print(self.on_loan)
+        print(self.on_shelf)
 
         return True
 
 
     def return_to_library(self):
+        print('here')
+        if (self.lent_out()): #If lent_out is true.
+
+
+            self.on_shelf.append(self)
+            self.on_loan.remove(self)
+
+            print(self.on_loan)
+            print(self.on_shelf)
+            # self.on_shelf.append(self.on_loan.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
+
+            print('The book was returned.')
+            return True
+
+        #Else, lent_out is false.
+        print('The book wasn\'t on loan in the first place.')
+        return False
+
         pass
 
 
@@ -101,7 +126,7 @@ print(sister_outsider.lent_out()) # True
 print(sister_outsider.borrow()) # False
 print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
 # print(len(Book.overdue())) # 0
-# print(sister_outsider.return_to_library()) # True
+print(sister_outsider.return_to_library()) # True
 # print(sister_outsider.lent_out()) # False
 print(len(Book.on_shelf)) # 2
-# print(len(Book.on_loan)) # 0
+print(len(Book.on_loan)) # 0
