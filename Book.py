@@ -8,9 +8,6 @@ import random
 # print(random.choice(options))
 # print(random.choice(options))
 
-
-
-
 # now = datetime.now()
 # print(now) # datetime.datetime(2018, 12, 14, 17, 7, 5, 190626) <--- the current date and time
 # print(now.timestamp()) # 1544825225.190626 <--- the current date and time represented as the number of seconds that have passed since January 1st 1970 at midnight UTC time (that's when they started counting!)
@@ -18,7 +15,6 @@ import random
 # print(now.timestamp() + one_hour) # 1544828825.190626 <---- an hour from now (as a "timestamp")
 # hour_from_now = now.timestamp() + one_hour
 # print(datetime.fromtimestamp(hour_from_now)) # datetime.datetime(2018, 12, 14, 18, 7, 5, 190626) <--- an hour from now (as a datetime obj)
-
 
 
 class Book():
@@ -44,23 +40,22 @@ class Book():
         # self.on_loan.append(self.on_shelf.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
         self.on_shelf.remove(self)
 
-        print('there')
-        print(self.on_loan)
-        print(self.on_shelf)
+        # print('there')
+        # print(self.on_loan)
+        # print(self.on_shelf)
 
         return True
 
 
     def return_to_library(self):
-        print('here')
+        # print('here')
         if (self.lent_out()): #If lent_out is true.
-
 
             self.on_shelf.append(self)
             self.on_loan.remove(self)
 
-            print(self.on_loan)
-            print(self.on_shelf)
+            # print(self.on_loan)
+            # print(self.on_shelf)
             # self.on_shelf.append(self.on_loan.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
 
             print('The book was returned.')
@@ -70,7 +65,6 @@ class Book():
         print('The book wasn\'t on loan in the first place.')
         return False
 
-        pass
 
 
     def lent_out(self):
@@ -103,7 +97,7 @@ class Book():
 
     @classmethod
     def overdue_books(cls):
-        print('\n Overdue book')
+        # print('\n Overdue book')
         # print(cls.on_loan[0].due_date)
 
         overdue_list = []
@@ -113,26 +107,21 @@ class Book():
                 print('THAT"S OVERDUEE!')
                 overdue_list.append(book)
 
-        print('Overdue book \n')
+        # print('Overdue book \n')
 
         return overdue_list
-        # pass
 
 
     @classmethod
-    def browse(cls):
-        pass
-        # print('hey')
-        # return random.choice(options)
-
-
+    def browse(cls): #Returns a random book from the on_shelf list.
+        return random.choice(cls.on_shelf)
 
 
 sister_outsider = Book.create("Sister Outsider", "Audre Lorde", "9781515905431")
 aint_i = Book.create("Ain't I a Woman?", "Bell Hooks", "9780896081307")
 if_they_come = Book.create("If They Come in the Morning", "Angela Y. Davis", "0893880221")
-# print(Book.browse().title) # "Sister Outsider" (this value may be different for you)
-# print(Book.browse().title) # "Ain't I a Woman?" (this value may be different for you)
+print(Book.browse().title) # "Sister Outsider" (this value may be different for you)
+print(Book.browse().title) # "Ain't I a Woman?" (this value may be different for you)
 print(len(Book.on_shelf)) # 3
 print(len(Book.on_loan)) # 0
 print(sister_outsider.lent_out()) # False
