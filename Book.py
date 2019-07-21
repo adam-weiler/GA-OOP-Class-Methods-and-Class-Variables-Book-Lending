@@ -1,99 +1,93 @@
-from datetime import datetime
-import random
-
-# options = [15,20,34923,31,3,5,86,1]
-# print(random.choice(options))
-# print(random.choice(options))
-# print(random.choice(options))
-# print(random.choice(options))
-# print(random.choice(options))
-
-# now = datetime.now()
-# print(now) # datetime.datetime(2018, 12, 14, 17, 7, 5, 190626) <--- the current date and time
-# print(now.timestamp()) # 1544825225.190626 <--- the current date and time represented as the number of seconds that have passed since January 1st 1970 at midnight UTC time (that's when they started counting!)
-# one_hour = 60 * 60 # 60 seconds times 60 minutes
-# print(now.timestamp() + one_hour) # 1544828825.190626 <---- an hour from now (as a "timestamp")
-# hour_from_now = now.timestamp() + one_hour
-# print(datetime.fromtimestamp(hour_from_now)) # datetime.datetime(2018, 12, 14, 18, 7, 5, 190626) <--- an hour from now (as a datetime obj)
-
+from datetime import date #Used to calculate due dates.
+from datetime import datetime #Used to calculate due dates.
+from datetime import timedelta #Used to calculate due dates.
+import random #Used to choose a random book from the shelf.
 
 class Book():
     #These are class variables.
     on_shelf = []
     on_loan = []
 
-
     #These are instance methods.
-    def __init__(self, title, author, ISBN):
+    def __init__(self, title, author, ISBN, genre):
         self.title = title
         self.author = author
         self.ISBN = ISBN
+        self.genre = genre
+        self.on_hold = False
+
+    def __str__(self):
+        return(f'{self.title} - {self.author} - {self.ISBN} - {self.genre} - On hold: {self.on_hold}')
+
+    def lent_out(self):
+        for book in self.on_shelf: #Iterates through all books on_shelf
+            if book.title == self.title: #If current book is the same as the one triggering the instance method.
+                # print(f'\'{book.title}\' is available!') #This line is not necessary.
+                return False #The book has not been taken out.
+            else: #Else, it will keep looking.
+                pass
+        #The loop is over and the book was not found.
+        # print(f'\'{self.title}\' is already lent out.') #This line is not necessary.
+        return True #The book has been taken out.
 
 
     def borrow(self):
-        if (self.lent_out()): #The book is already lent out.
+        if self.lent_out(): #The book is already lent out.
+            self.on_hold = True
+            print(f'The book \'{self.title}\' is already lent out. It is due on {self.due_date}.')
+            print('It has been put on hold for you.')
             return False
-        #Else, the book is not lent out.
-        self.due_date = self.current_due_date() #Sets the book's due_date to the current_due_date.
-        
-        self.on_loan.append(self)
-        # self.on_loan.append(self.on_shelf.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
-        self.on_shelf.remove(self)
-
-        # print('there')
-        # print(self.on_loan)
-        # print(self.on_shelf)
-
-        return True
-
-
-    def return_to_library(self):
-        # print('here')
-        if (self.lent_out()): #If lent_out is true.
-
-            self.on_shelf.append(self)
-            self.on_loan.remove(self)
-
-            # print(self.on_loan)
-            # print(self.on_shelf)
-            # self.on_shelf.append(self.on_loan.remove(self)) #Removes the book from on_shelf and appends it to on_loan.
-
-            print('The book was returned.')
+        else: #Else the book is not lent out.
+            print(f'\'{self.title}\' is available!')
+            self.due_date = self.current_due_date()  #Sets the book's due_date to new due_date.
+            self.on_hold = False
+            self.on_loan.append(self) #Appends book to on_loan list.
+            self.on_shelf.remove(self) #Removes book on_shelf list.
+            print(f'You have borrowed \'{self.title}\'. It is due on {self.due_date}.')
             return True
 
-        #Else, lent_out is false.
-        print('The book wasn\'t on loan in the first place.')
-        return False
+    def return_to_library(self):
+        if (self.lent_out()): #If lent_out is true.
+            self.on_shelf.append(self) #Appends book to on_shelf list.
+            self.on_loan.remove(self) #Removes book on_loan list.
+            print('The book was returned.')
+            return True
+        else: #Else lent_out is false.
+            print('The book wasn\'t on loan in the first place.')
+            return False
+
+
+    def renew(self): #Renews the book by setting the due_date for 2 weeks from now.
+        if (self.lent_out()): #If lent_out is true.
+            if (self.on_hold): #If book is on hold.
+                print('The book is on hold and cannot be renewed.')
+                return False
+            else: #Else book is not on hold.
+                self.due_date = datetime.now() #This line is unecessary. It's to simulate the book being due today.
+                self.due_date = self.current_due_date() #Sets the book's due_date to new due_date.
+                print(f'You have renewed \'{self.title}\'. It is now due on {self.due_date}.')
+                return True
+        else: #Else lent_out is false.
+            print('The book wasn\'t on loan in the first place.')
+            return False
 
 
 
-    def lent_out(self):
-        # print(self.on_shelf)
-
-        # print(self)
-
-        for book in self.on_shelf: #Iterates through all books on_shelf
-            # print(book.title)
-            if (book == self): #If current iteration book is the same as the one triggering the instance method.
-                return False #The book has not been taken out.
-            return True #Else, the book has been taken out.
             
-
-
-
     #These are class methods.
     @classmethod
-    def create(cls, title, author, ISBN):
-        new_book = Book(title, author, ISBN)
+    def create(cls, title, author, ISBN, genre):
+        new_book = Book(title, author, ISBN, genre)
         cls.on_shelf.append(new_book)
+        print(new_book)
         return new_book
 
     @classmethod
     def current_due_date(cls):
-        now = datetime.now()
-        two_weeks = 60 * 60 * 24 * 14 # two weeks expressed in seconds  
-        future_timestamp = now.timestamp() + two_weeks
-        return datetime.fromtimestamp(future_timestamp)
+        today = datetime.combine(date.today(), datetime.min.time()) #Today's date at midnight, 2019-07-21 00:00:00.
+        two_weeks = 60 * 60 * 24 * 15 - 1 # Fifteen days (minus 1 second), expressed in seconds.
+        future_timestamp = today.timestamp() + two_weeks #Two weeks from today, at 11.59:59pm, expressed in seconds.
+        return datetime.fromtimestamp(future_timestamp) #Converts the future_timestamp to 2019-08-04 23:59:59
 
     @classmethod
     def overdue_books(cls):
@@ -104,11 +98,8 @@ class Book():
         
         for book in cls.on_loan: #Iterates through each book in the on_loan list.
             if (book.due_date < datetime.now()): #If current book's due_date happened before this moment.
-                print('THAT"S OVERDUEE!')
+                print('THAT\'S OVERDUEE!')
                 overdue_list.append(book)
-
-        # print('Overdue book \n')
-
         return overdue_list
 
 
@@ -117,22 +108,44 @@ class Book():
         return random.choice(cls.on_shelf)
 
 
-sister_outsider = Book.create("Sister Outsider", "Audre Lorde", "9781515905431")
-aint_i = Book.create("Ain't I a Woman?", "Bell Hooks", "9780896081307")
-if_they_come = Book.create("If They Come in the Morning", "Angela Y. Davis", "0893880221")
-print(Book.browse().title) # "Sister Outsider" (this value may be different for you)
-print(Book.browse().title) # "Ain't I a Woman?" (this value may be different for you)
+sister_outsider = Book.create('Sister Outsider', 'Audre Lorde', '9781515905431', 'Nonfiction')
+# aint_i = Book.create('Ain\'t I a Woman?', 'Bell Hooks', '9780896081307', 'Nonfiction')
+# if_they_come = Book.create('If They Come in the Morning', 'Angela Y. Davis', '0893880221', 'Nonfiction')
+game_of_thrones = Book.create('Game of Thrones', 'George R.R. Martin', '0553588486', 'Fantasy')
+book_1984 = Book.create('1984', 'George Orwell', '9780451524935', 'Fiction')
+hitchikers_guide_to_the_galaxy = Book.create('The Hitchhiker\'s Guide to the Galaxy', 'Douglas Adams', '0345391802', 'Science-Fiction')
+print()
+
+# print(Book.browse().title) # A random book title.
+# print(Book.browse().title)
+# print(len(Book.on_shelf)) # 3
+# print(len(Book.on_loan)) # 0
+# print()
+
+# print(sister_outsider.lent_out()) # False ; Book is not lent out.
+sister_outsider.borrow() # True ; Book is now borrowed.
+# print(len(Book.on_shelf)) # 2
+# print(len(Book.on_loan)) # 1
+# # print(sister_outsider.lent_out()) # True
+# print()
+
+sister_outsider.borrow() # False
+print(sister_outsider.on_hold) # True
+sister_outsider.renew() #False
+print()
+
+
+# print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
+print(len(Book.overdue_books())) # 0
+sister_outsider.return_to_library() # True
+# print(sister_outsider.lent_out()) # False
 print(len(Book.on_shelf)) # 3
 print(len(Book.on_loan)) # 0
-print(sister_outsider.lent_out()) # False
-print(sister_outsider.borrow()) # True
-print(len(Book.on_shelf)) # 2
-print(len(Book.on_loan)) # 1
-print(sister_outsider.lent_out()) # True
-print(sister_outsider.borrow()) # False
-print(sister_outsider.due_date) # 2017-02-25 20:52:20 -0500 (this value will be different for you)
-print(len(Book.overdue_books())) # 0
-print(sister_outsider.return_to_library()) # True
-print(sister_outsider.lent_out()) # False
-print(len(Book.on_shelf)) # 2
-print(len(Book.on_loan)) # 0
+print()
+
+# print(Book.browse().genre) # A random book genre.
+# print(Book.browse().genre)
+# sister_outsider.renew() #Renews the due_date by 2 weeks.
+
+
+print(sister_outsider)
